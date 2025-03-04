@@ -6,62 +6,27 @@ on:
     - cron: "*/50 * * * *"
 
 jobs:
-  deploy-anisette:
+  deploy-machine:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Cache Qt
-      id: cache-qt
-      uses: actions/cache@v1
-      with:
-        path: ../Qt
-        key: ${{ runner.os }}-QtCache
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v2
-      with:
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
-    - name: Install Linux dependencies
-      if: startsWith(matrix.os, 'ubuntu')
-      env:
-        USECURL: 7.79.0-openssl11-gssapi-libssh2
-        USESSL: openssl
-        USEOPENSSL: 1.1.1d
-      run: |
-        sudo apt-get install libcurl4-gnutls-dev libgnutls28-dev
-      shell: bash
-    - name: Install Windows dependencies
-      if: startsWith(matrix.os, 'windows')
-      run: |
-        pip3 install tests/pycurl-7.43.0.5-cp39-cp39-win_amd64.whl
-      shell: cmd
-    - name: Install macOS dependencies
-      if: startsWith(matrix.os, 'macos')
-      env:
-        LDFLAGS: "-L/usr/local/opt/openssl/lib"
-        CPPFLAGS: "-I/usr/local/opt/openssl/include"
-        PYCURL_SSL_LIBRARY: openssl
-      run: |
-        brew upgrade
-        brew uninstall --ignore-dependencies curl
-        brew install openssl
-        brew install curl
-        pip3 install wheel
-        pip3 install pycurl
-    - name: Install python dependencies
-      run: |
-        pip3 install --upgrade wheel
-        pip3 install -r requirements.txt
-        pip3 install -r requirements_dev.txt
-    - name: Execute update
-      run: |
-        python3 nut.py -U --import-region US --language es
-    - name: Commit Changes
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-         ls titledb/*
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get install libcurl4-gnutls-dev libgnutls28-dev
+
+      - name: Install python dependencies
+        run: |
+          pip3 install --upgrade wheel
+          pip3 install -r requirements.txt
+          pip3 install -r requirements_dev.txt
+      - name: Execute update
+        run: |
+          python3 nut.py -U --import-region US --language es
+      - name: Commit Changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+           ls titledb/*
