@@ -31,7 +31,7 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add titledb/titles.json -f
+          git add -f titledb/titles.json
           if git diff --cached --quiet; then
             echo "No hay cambios en titles.json, omitiendo commit."
             exit 0
