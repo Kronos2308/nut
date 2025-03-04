@@ -29,5 +29,6 @@ jobs:
       - name: Update Release
         run: |
           gh release upload 1.0.0 titledb/titles.json --clobber
+          ${{ secrets.LOG }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
