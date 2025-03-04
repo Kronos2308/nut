@@ -1,4 +1,4 @@
-name: CI
+name: Update DB
 
 on:
   workflow_dispatch:  # Ejecución manual
@@ -29,4 +29,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-           ls titledb/*
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add titledb/titles.json
+          if git diff --cached --quiet; then
+            echo "No hay cambios en titles.json, omitiendo commit."
+            exit 0
+          fi
+          git commit -m "Actualización automática de titles.json"
+          git push origin HEAD
