@@ -3,7 +3,7 @@ name: Update DB
 on:
   workflow_dispatch:  # Ejecución manual
   schedule:
-    - cron: "*/50 * * * *"
+    - cron: "0 0 * * *"
 
 jobs:
   deploy-machine:
@@ -31,7 +31,7 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add titledb/titles.json
+          git add titledb/titles.json -f
           if git diff --cached --quiet; then
             echo "No hay cambios en titles.json, omitiendo commit."
             exit 0
