@@ -1,13 +1,9 @@
 name: CI
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  workflow_dispatch:  # Ejecución manual
+  schedule:
+    - cron: "*/50 * * * *"
 
 jobs:
   build:
@@ -67,18 +63,11 @@ jobs:
         pip3 install --upgrade wheel
         pip3 install -r requirements.txt
         pip3 install -r requirements_dev.txt
-    - name: Execute tests and coverage report
-      env:
-        QT_QPA_PLATFORM: offscreen
+    - name: Execute update
       run: |
-        invoke coverage --gui
-    - name: Lint
-      # FIXME: replace with platform-agnostic method to check pylint exit code
-      if: matrix.os != 'windows-latest'
-      run: |
-        invoke lint || pylint-exit $?
-    - name: Upload code coverage report to Coveralls
+        python3 nut.py -U --import-region US --language es
+    - name: Commit Changes
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        coveralls --service=github
+         ls titledb/*
