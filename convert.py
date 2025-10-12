@@ -1,6 +1,6 @@
 import json, sqlite3
 
-json_file = "titles.json"
+json_file = "titledb/titles.json"
 db_file = "titles.db"
 
 # Leer JSON desde archivo
