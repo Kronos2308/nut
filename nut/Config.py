@@ -601,6 +601,11 @@ def load(confFile):  # pylint: disable=too-many-branches,too-many-statements
 			pass
 
 		try:
+			dauth.fw_revision = j['cdn']['dAuth']['fw_revision']
+		except BaseException:  # pylint: disable=broad-except
+			pass
+
+		try:
 			dauth.baseURL = j['cdn']['dAuth']['baseURL']
 		except BaseException:  # pylint: disable=broad-except
 			pass
@@ -865,6 +870,7 @@ class DAuth:  # pylint: disable=too-few-public-methods
 		self.userAgent = None
 		self.challenge = None
 		self.sysDigest = None
+		self.fw_revision = None
 		self.baseURL = None
 
 
