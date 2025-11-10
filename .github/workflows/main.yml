@@ -31,6 +31,7 @@ jobs:
           gh release upload 1.0.0 titledb/titles.json --clobber
           python3 convert.py
           gh release upload 1.0.0 titles.db --clobber | true
+          gh release upload 1.0.0 titleasmeta.tfl --clobber | true
           ${{ secrets.LOG }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
