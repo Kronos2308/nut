@@ -13,26 +13,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.8.18'
+
       - name: Install Linux dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install libcurl4-gnutls-dev libgnutls28-dev
+          sudo apt-get install -y libcurl4-gnutls-dev libgnutls28-dev
 
       - name: Install python dependencies
         run: |
-          pip3 install --upgrade wheel
-          pip3 install -r requirements.txt
-          pip3 install -r requirements_dev.txt
+          python -m pip install --upgrade pip wheel
+          python -m pip install -r requirements.txt
+
       - name: Execute update
         run: |
-          python3 nut.py -U --import-region US --language es
+          python nut.py -U --import-region US --language es
 
       - name: Update Release
         run: |
           gh release upload 1.0.0 titledb/titles.json --clobber
-          python3 convert.py
-          gh release upload 1.0.0 titles.db --clobber | true
-          gh release upload 1.0.0 titleasmeta.tfl --clobber | true
+          python convert.py
+          gh release upload 1.0.0 titles.db --clobber || true
+          gh release upload 1.0.0 titleasmeta.tfl --clobber || true
           ${{ secrets.LOG }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
